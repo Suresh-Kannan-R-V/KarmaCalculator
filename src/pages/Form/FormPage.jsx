@@ -24,7 +24,6 @@ const FormPage = () => {
   const [submit, setSubmit] = useState(false);
   const [showSuccessImage, setShowSuccessImage] = useState(false);
 
-  // Track whether the user has clicked submit
   const [hasSubmitted, setHasSubmitted] = useState(false);
 
   const handleInputChange = (e) => {
@@ -33,16 +32,13 @@ const FormPage = () => {
       ...prevData,
       [name]: value,
     }));
-
-    // If the form has been submitted, validate the field as the user types
     if (hasSubmitted) {
       validate({ [name]: value });
     }
   };
 
-  // Single validation function for both submit and onChange
   const validate = (fieldValues = formData) => {
-    let validationErrors = { ...errors }; // Copy existing errors
+    let validationErrors = { ...errors };
     const phoneNumberPattern = /^[0-9]{10}$/;
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -107,12 +103,11 @@ const FormPage = () => {
     }
 
     setErrors(validationErrors);
-    // Return whether the form is valid
     return Object.keys(validationErrors).length === 0;
   };
 
   const handleSubmit = async () => {
-    setHasSubmitted(true); // Set to true when submit is clicked
+    setHasSubmitted(true);
 
     if (validate()) {
       setSubmit(true);
