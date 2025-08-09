@@ -3,18 +3,93 @@ import { createContext, useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import { apiHost } from "../../config/config";
 import { Surfing } from "@mui/icons-material";
+import FormPage from "../../pages/Form/FormPage";
 export const SurveyDataContext = createContext(null);
 
-export const SurveyDataContextProvider = ({component}) => {
-  const [score,setScore] = useState(0);
-  const [cookies, setCookie] = useCookies(['surveyData','lastSurveyPosition']);
-  const [surveyPostData,setSurveyPostData] = useState([]);
-  const setSurveyData =  (data)=>{
-    setCookie('surveyData',data);
+export const SurveyDataContextProvider = ({ component }) => {
+  const [score, setScore] = useState(0);
+  const [cookies, setCookie] = useCookies(['surveyData', 'lastSurveyPosition']);
+  const [surveyPostData, setSurveyPostData] = useState({
+    user_id: 1,
+    vehicle_id: null,
+    vehicles_count: 0,
+    distance_per_week: 0,
+    food_id: null,
+    electricity_units: 0,
+    carbon_footprint: 0
+  });
+  const setSurveyData = (data) => {
+    setCookie('surveyData', data);
   }
-  const setLastSurveyPosition = (data)=>{
-    setCookie('lastSurveyPosition',data);
+  const setLastSurveyPosition = (data) => {
+    setCookie('lastSurveyPosition', data);
   }
+
+  const fetchVehicleTypes = async () => {
+    let responseData = null
+    try {
+      await axios.get(`${apiHost}/api/vehicleTypes`).then((res) => {
+        console.log(res.data)
+        responseData = res.data;
+      })
+    } catch (error) {
+      console.error(error.message || "Error in fetching Vehicle Types")
+
+      return (null);
+    }
+    return responseData
+  }
+
+  const fetchFoodTypes = async () => {
+    let responseData = null
+    try {
+      await axios.get(`${apiHost}/api/foodTypes`).then((res) => {
+        console.log(res.data)
+        responseData = res.data;
+      })
+    } catch (error) {
+      console.error(error.message || "Error in fetching Food Types")
+
+      return (null);
+    }
+    return responseData
+  }
+
+  const fetchAppliancesTypes = async () => {
+    let responseData = null
+    try {
+      await axios.get(`${apiHost}/api/appliancesTypes`).then((res) => {
+        console.log(res.data)
+        responseData = res.data;
+      })
+    } catch (error) {
+      console.error(error.message || "Error in fetching Appliances Types")
+
+      return (null);
+    }
+    return responseData
+  }
+
+
+  const fetchFuelTypes = async (vehicleId) => {
+    let responseData = null
+    if (!vehicleId) {
+      console.error("Invalid Vehicle Type")
+      return (null);
+    }
+    try {
+      await axios.get(`${apiHost}/api/fueltypes/${vehicleId}`).then((res) => {
+        console.log(res.data)
+        responseData = res.data;
+      })
+    } catch (error) {
+      console.error(error.message || "Error in fetching Fuel Types")
+
+      return (null);
+    }
+    return responseData
+  }
+
   const [questions, setQuestions] = useState([
     [
       { q: "Choose the vehicles you use for commuting?" },
@@ -35,137 +110,129 @@ export const SurveyDataContextProvider = ({component}) => {
     ],
   ]);
 
-  const [stepData,setStepData] =  useState([]);
-
-  const fetchStepData = ()=>{
-    try {
-
-      axios.get(`${apiHost}/api/stepdata`).then((res)=>{ 
-        if(res.data){
-          console.log(res.data)
-          setStepData(res.data);
+  const [stepData, setStepData] = useState([
+    [
+      {
+        type: 'card',
+        name: 'vehicleTypes',
+        select: 'single',
+        fetch: fetchVehicleTypes,
+      },
+      {
+        type: 'slider',
+        name: 'noOfVehicles',
+        data: {
+          "blockInterval": 2,
+          "start": 2,
+          "end": 10,
+          "labelText": "",
+          "collectionType": "vehicles"
         }
-        else{
-          return console.error('Error in fetching Step Data');
+      },
+      {
+        type: 'card',
+        name: 'fuelTypes',
+        select: 'single',
+        fetch: fetchFuelTypes,
+      },
+      {
+        type: 'slider',
+        data: {
+          "start": 10,
+          "end": 250,
+          "labelText": "km",
+          "collectionType": "km"
+        }
+      },
+    ],
+    [
+      {
+        type: 'card',
+        name: 'fuelTypes',
+        select: 'single',
+        fetch: fetchFoodTypes,
+      },
+    ],
+    [
+      {
+        type: 'card',
+        name: 'fuelTypes',
+        select: 'multi',
+        fetch: fetchAppliancesTypes,
+      },
+    ],
+    [
+      {
+        "type": "slider",
+        "name": "power_units",
+        "data": {
+          "start": 100,
+          "end": 1000,
+          "labelText": "units",
+          "collectionType": "units"
+        }
+      }
+    ]
+  ]);
+
+
+
+  useEffect(() => {
+    console.log(cookies.surveyData)
+    if (cookies.surveyData) {
+      let totalEmission = 0;
+      totalEmission += cookies.surveyData[0].selection[3] * cookies.surveyData[0].emission;
+      totalEmission += cookies.surveyData[1].emission;
+      let appliancesCount = cookies.surveyData[2].selection.length;
+      totalEmission += cookies.surveyData[2].emission * (cookies.surveyData[3].selection[0] / appliancesCount) / 100;
+
+      const vehicleId = cookies.surveyData[0].selection[0][0];
+      const vehiclesCount = cookies.surveyData[0].selection[1];
+      const vehiclesFuelId = cookies.surveyData[0].selection[2][0];
+      const distancePerWeek = cookies.surveyData[0].selection[3];
+      const foodId = cookies.surveyData[1].selection[0][0];
+      const appliances = cookies.surveyData[2].selection[0];
+      const electricityUnits = cookies.surveyData[3].selection[0];
+      setSurveyPostData({
+        user_id: 1,
+        vehicle_id: vehicleId,
+        vehicles_count: vehiclesCount,
+        vehicle_fuel_id: vehiclesFuelId,
+        distance_per_week: distancePerWeek,
+        food_id: foodId,
+        electricity_units: electricityUnits,
+        carbon_footprint: totalEmission,
+        appliances: appliances
+      })
+      setScore(totalEmission)
+
+    }
+    else {
+      const stepArray = Array(stepData.length);
+      let index = 0;
+      stepData.forEach((step) => {
+        stepArray[index++] = {
+          selection: Array(step.length).fill(Array()),
+          emission: 0.00
         }
       })
-      
-    } catch (error) {
-        console.error(error.message || 'Error in fetching Step Data');
+      console.log(stepArray)
+      setCookie('surveyData', stepArray);
     }
-  }
 
-  useEffect(()=>{
-    fetchStepData(); 
-  },[])
+  }, [stepData, cookies.surveyData])
 
- useEffect(()=>{
-  let postSurveyData = [];
-  let totalEmissionValue = 0;
-  let appliancesData = null;
-    if(cookies.surveyData){
-         cookies.surveyData.forEach((step,i)=>{
-          const selectionList =  [];
-          let  isEmissionValueReached = false;
-          let  selectionIndices = [];
-          let isFirstSelectionDone= false;
-          let selectionIds = [];
-          let name  = '';
-          let  quantity = 0;
-          let emission = 0;
-             step.forEach((section,index)=>{
-              if(name===''){
-                     name  = stepData[i]?.[index]?.name
-              }
-                    section.forEach((choice,ind)=>{
-                      if(choice !== false){
-                        // console.log(emission)
-                        if(Array.isArray(stepData[i]?.[index]?.data)){
-                          // console.log(stepData[i]?.[index]?.data?.[ind]?.emission_value)
-                        if(stepData[i]?.[index]?.data?.[ind]?.emission_value){
-                          if(!isFirstSelectionDone){
-                            isEmissionValueReached = true;
-                            selectionIndices.push(ind)
-                            quantity++;
-                            selectionIds.push(Number(stepData[i]?.[index]?.data?.[ind]?.id));
-                            emission+=Number(stepData[i]?.[index]?.data?.[ind]?.emission_value);
-                          }
-                          else{
-                            isEmissionValueReached = true;
-                            selectionIds.push(Number(stepData[i]?.[index]?.data?.[ind]?.id));
-                            selectionIndices.forEach((selectIndex)=>{
-                               emission+=Number(stepData[i]?.[index]?.data?.[ind]?.emission_value?.[selectIndex]);
-                            })
-                          }
-                        }
-                        else{
-                          selectionIndices.push(ind)
-                          selectionIds.push(Number(stepData[i]?.[index]?.data?.[ind]?.id));
-                        }
-                        }
-                        else{
-                          isFirstSelectionDone= true;
-                          if(isEmissionValueReached){
-                              //  console.log(quantity,stepData[i]?.[index]?.data)
-                               let totalUnit = Number(choice);
-                               emission += emission*(totalUnit/quantity);
-                               selectionList.push(Number(choice));
-                          }
-                          else{
-                          // console.log(quantity,stepData[i]?.[index]?.data);
-                          
-                               quantity =  Number(choice);
-                               selectionList.push(Number(choice));
-                               if(appliancesData!==null && appliancesData.quantity>0){
-                                emission =(quantity/appliancesData?.quantity)*appliancesData?.emission;
-                                emission /=10;
-                                // console.log("Appliances Data : ",emission,appliancesData)
-
-                               }
-                          }
-                          
-                        }
-                        }
-                      }) 
-                      if(i===2){
-                        appliancesData={quantity,emission};
-                      }
-
-                     
-                    })
-                    totalEmissionValue+=emission;
-                    if(selectionIds.length>0){
-                      selectionList.push(selectionIds)
-                    }
-                    console.log(stepData[i])
-                    postSurveyData.push({
-                      name:name,
-                      selection:selectionList
-                    })
-                    // console.log(postSurveyData)
-                
-             })
-        
-    }
-    postSurveyData.push({
-      name:'carbon_footprint',
-      selection:[totalEmissionValue.toFixed(2)]
-    })
-    setScore(totalEmissionValue);
-    setSurveyPostData(postSurveyData);
-    console.log(postSurveyData);
- },[stepData,cookies.surveyData])
-
-//  console.log(cookies.surveyData)
+  //  console.log(cookies.surveyData)
 
   return (
     <SurveyDataContext.Provider
       value={{
         cookies,
         setSurveyData,
-         stepData,
+        stepData,
         questions,
         score,
+        setScore,
         surveyPostData,
         setLastSurveyPosition
       }}

@@ -1,7 +1,3 @@
-@font-face {
-  font-family: "Excon";
-  src: url("/path-to-your-font/Excon.ttf") format("truetype"); /* Adjust the path */
-}
 .form-main {
   position: relative;
   height: 100%;
@@ -47,7 +43,7 @@
   font-size: 18px;
   line-height: 22px;
   padding: 15px;
-  font-family: "Excon", sans-serif;
+	font-family: "Excon-Bold";
   opacity: 0;
   transform: translateY(500px);
   animation: slideInText 0.4s ease-in-out 0.1s forwards,
@@ -75,7 +71,7 @@
   border-radius: 16px;
   padding: 20px;
   text-align: center;
-  font-family: "Excon", sans-serif;
+	font-family: "Excon-Bold";
   top: -10px;
   height: 550px;
   z-index: 2;

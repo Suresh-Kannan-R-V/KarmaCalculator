@@ -37,21 +37,21 @@ const SurveyPage = () => {
       console.log(
         searchParams?.get("step")
           ? Number(
-              CryptoJS.AES.decrypt(
-                searchParams?.get("section"),
-                "Karma007"
-              ).toString(CryptoJS.enc.Utf8)
-            )
+            CryptoJS.AES.decrypt(
+              searchParams?.get("section"),
+              "Karma007"
+            ).toString(CryptoJS.enc.Utf8)
+          )
           : ""
       );
       try {
         const nextStep = searchParams?.get("step")
           ? Number(
-              CryptoJS.AES.decrypt(
-                searchParams?.get("step"),
-                "Karma007"
-              ).toString(CryptoJS.enc.Utf8)
-            )
+            CryptoJS.AES.decrypt(
+              searchParams?.get("step"),
+              "Karma007"
+            ).toString(CryptoJS.enc.Utf8)
+          )
           : 1;
         if (nextStep > cookies.lastSurveyPosition.step) {
           setCurrStep(cookies.lastSurveyPosition.step);
@@ -61,11 +61,11 @@ const SurveyPage = () => {
 
         const nextSection = searchParams?.get("section")
           ? Number(
-              CryptoJS.AES.decrypt(
-                searchParams?.get("section"),
-                "Karma007"
-              ).toString(CryptoJS.enc.Utf8)
-            )
+            CryptoJS.AES.decrypt(
+              searchParams?.get("section"),
+              "Karma007"
+            ).toString(CryptoJS.enc.Utf8)
+          )
           : 1;
         if (nextStep > cookies.lastSurveyPosition.step) {
           setCurrSection(cookies.lastSurveyPosition.section);
@@ -155,17 +155,16 @@ const SurveyPage = () => {
   return (
     <div
       style={{
-        backgroundImage: `url( ${
-          backgroundImages?.find((data, i) => {
-            if (i < backgroundImages.length - 1) {
-              return (
-                score >= data.score && score <= backgroundImages[i + 1].score
-              );
-            } else {
-              return true;
-            }
-          }).img_url
-        })`,
+        backgroundImage: `url( ${backgroundImages?.find((data, i) => {
+          if (i < backgroundImages.length - 1) {
+            return (
+              score >= data.score && score <= backgroundImages[i + 1].score
+            );
+          } else {
+            return true;
+          }
+        }).img_url
+          })`,
       }}
       className="container"
     >
@@ -258,7 +257,8 @@ const SurveyPage = () => {
 
         {isLast && (
           <Buttons
-            onClick={ () => {
+            onClick={() => {
+              console.log(surveyPostData)
               axios
                 .post(`${apiHost}/api/carbonsurvey`, surveyPostData)
                 .then((response) => {

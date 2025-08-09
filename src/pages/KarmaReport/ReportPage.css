@@ -71,7 +71,36 @@
 	align-items: center;
 	justify-content: center;
 
-	.RepContainer {
+	.positiveRepContainer{
+		height: 60%;
+		width: 80%;
+		background-color: #dbfff1;
+		border-radius: 5%;
+		font-family: "Sarabun", sans-serif;
+		display: flex;
+		justify-content: center;
+
+		.RepImg {
+			height: 100%;
+			display: flex;
+			color: #42a87f;
+			align-items: center;
+			justify-content: center;
+			margin-right: 5%;
+		}
+
+		.RepFeed {
+			height: 100%;
+			font-size: 0.65em;
+			font-weight: 600;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			color: #42a87f;
+		}
+	}
+
+	.negativeRepContainer {
 		height: 60%;
 		width: 80%;
 		background-color: #fff1f1;
@@ -83,6 +112,7 @@
 		.RepImg {
 			height: 100%;
 			display: flex;
+			color: #ff5757;
 			align-items: center;
 			justify-content: center;
 			margin-right: 5%;
@@ -90,7 +120,7 @@
 
 		.RepFeed {
 			height: 100%;
-			font-size: 0.7em;
+			font-size: 0.65em;
 			font-weight: 600;
 			display: flex;
 			align-items: center;

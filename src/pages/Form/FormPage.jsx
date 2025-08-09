@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import "./FormPage.css";
 import cloud from "../../assets/clouds.svg";
 import trees from "../../assets/Trees.svg";
@@ -8,8 +8,24 @@ import success from "/src/assets/success.gif";
 import lastBg from "../../assets/lastBg.png";
 import successimage from "../../assets/success-image.png";
 import { TextField } from "@mui/material";
+import { SurveyDataContext } from "../../contexts/surveyData/SurveyDataContext";
+import { apiHost } from "../../config/config";
 
 const FormPage = () => {
+	const {score} =  useContext(SurveyDataContext);
+  
+	const [percentage,setPercentage]  = useState(0);
+	useEffect(()=>{
+         let percentage = (((score/14.4))*100).toFixed(2)-100;
+         setPercentage(percentage)
+         if(percentage>0){
+          setTreeCount(((percentage/100)*60).toFixed(0))
+         }
+	},[score])
+  const [treeCount,setTreeCount]=useState(1);
+
+  
+  
   const [formData, setFormData] = useState({
     survey_id: 1,
     name: "",
@@ -84,12 +100,13 @@ const FormPage = () => {
       if (!fieldValues.tree_count) {
         validationErrors.tree_count = "Tree count required";
       }
-      else if (fieldValues.tree_count == 0) {
-        validationErrors.tree_count = "Tree count must be at least 1.";
-      }
       else if (fieldValues.tree_count <= 0) {
         validationErrors.tree_count = "Tree count not be negative";
-      } else {
+      }
+      else if (fieldValues.tree_count < treeCount) {
+        validationErrors.tree_count = `Tree count must be at least ${treeCount}.`;
+      }
+     else {
         delete validationErrors.tree_count;
       }
     }
@@ -112,7 +129,7 @@ const FormPage = () => {
     if (validate()) {
       setSubmit(true);
       try {
-        const response = await fetch("http://localhost:8000/api/insert", {
+        const response = await fetch(`${apiHost}/api/formpost`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -312,9 +329,7 @@ const FormPage = () => {
                   FormHelperTextProps={{
                     style: { fontSize: "8px" },
                   }}
-                  inputProps={{
-                    min: 1,
-                  }}
+                  InputProps={{inputProps:{min:1}}}
                   sx={{
                     "& .MuiOutlinedInput-root.Mui-error": {
                       "& fieldset": {

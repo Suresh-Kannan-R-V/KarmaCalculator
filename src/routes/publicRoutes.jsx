@@ -16,11 +16,11 @@ const publicRoutes = [
     },
     {
         path:'/karmaReport',
-        element:<ReportPage/>
+        element:<SurveyDataContextProvider component={<ReportPage/>} />
     },
     {
         path:'/form',
-        element:<FormPage/>
+        element:<SurveyDataContextProvider component={<FormPage/>} />
     }
 ]
 

@@ -15,25 +15,7 @@ const PromptContainer = ({
 }) => {
   const surveyData = useContext(SurveyDataContext)
   const {questions,stepData,cookies,setSurveyData} =  surveyData;
-
-  useEffect(() => {
-    console.log(cookies && (!cookies.surveyData) && stepData.length>0);
-    if(cookies && (!cookies.surveyData) && stepData.length>0){
-      let newOuterArray = Array(stepData?.length);
-      stepData?.forEach((steps,i)=>{
-        let sectionArray = Array(steps.length);
-        steps.forEach((section,index)=>{
-          console.log(section)
-          let newInnerArray = Array(section?.data?.length).fill(false);
-          sectionArray[index]=(newInnerArray)
-        })
-        newOuterArray[i] = sectionArray;
-      })
-      console.log(newOuterArray)
-      setSurveyData(newOuterArray);
-    }
- 
-  }, [stepData,cookies]);
+  const [cardData,setCardData] = useState([]);
 
   useEffect(() => {
     if (currSection > questions[currStep - 1].length) {
@@ -50,16 +32,27 @@ const PromptContainer = ({
   const currentQuestion = questions.length>0?questions[currStep - 1][currSection - 1]?.q:null;
   const currentStepData = stepData.length>0?stepData[currStep - 1][currSection - 1]:null;
 
+  useEffect(()=>{
+    if(currentStepData?.type==='card')
+  {  if(currentStepData?.name==='fuelTypes'){
+      currentStepData?.fetch(cookies?.surveyData[currStep-1]?.selection[0][0])?.then((data)=>{setCardData(data)})
+    }
+    else{
+      currentStepData?.fetch()?.then((data)=>{setCardData(data)})
+    }}
+  },[currentStepData,currStep,currSection])
   return (
     <div className="promptContainer">
       <div className="question">{currentQuestion}</div>
       {currentStepData?.type === "card" && (
         <CardContainer
           cookies={cookies}
-          selectedCardData={cookies.surveyData && cookies?.surveyData[currStep-1][currSection-1]}
+          selectedCardData={cookies.surveyData && cookies?.surveyData?.[currStep-1]?.[currSection-1]}
           select={currentStepData.select}
           setValidateNext={setValidateNext}
-          cardData={currentStepData.data}
+          cardData={cardData}
+          currSection={currSection}
+          currStep={currStep}
         />
       )}
       {currentStepData?.type === "slider" && (
@@ -70,6 +63,8 @@ const PromptContainer = ({
             setValidateNext={setValidateNext}
             start={currentStepData.data.start}
             end={currentStepData.data.end}
+            currSection={currSection}
+            currStep={currStep}
             selectedSliderData={ cookies.surveyData && cookies?.surveyData[currStep-1][currSection-1]}
             blockInterval={currentStepData.data.blockInterval}
             labelText={currentStepData.data.labelText}
