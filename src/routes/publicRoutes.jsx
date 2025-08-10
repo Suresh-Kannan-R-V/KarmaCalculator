@@ -2,25 +2,31 @@ import FormPage from "../pages/Form/FormPage";
 import InstructionsPage from "../pages/Instructions/InstructionsPage";
 import ReportPage from "../pages/KarmaReport/ReportPage";
 import SurveyPage from "../pages/Survey/SurveyPage";
-import {SurveyDataContextProvider} from '../contexts/surveyData/SurveyDataContext'
+
+import { SurveyDataContextProvider } from '../contexts/surveyData/SurveyDataContext'
+import { Navigate } from "react-router-dom";
 
 const publicRoutes = [
     {
-        path:'/instructions',
-        element:<InstructionsPage/>
+        path: "/",
+        element: <Navigate to="/instructions" />,
     },
     {
-        path:'/survey',
-        element:<SurveyDataContextProvider component={<SurveyPage/>} />
-        
+        path: '/instructions',
+        element: <InstructionsPage />
     },
     {
-        path:'/karmaReport',
-        element:<SurveyDataContextProvider component={<ReportPage/>} />
+        path: '/survey',
+        element: <SurveyDataContextProvider component={<SurveyPage />} />
+
     },
     {
-        path:'/form',
-        element:<SurveyDataContextProvider component={<FormPage/>} />
+        path: '/karmaReport',
+        element: <SurveyDataContextProvider component={<ReportPage />} />
+    },
+    {
+        path: '/form',
+        element: <SurveyDataContextProvider component={<FormPage />} />
     }
 ]
 
