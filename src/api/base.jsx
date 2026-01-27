@@ -1,0 +1,1 @@
+export const apiHost = `https://karmabackend.onrender.com`;
