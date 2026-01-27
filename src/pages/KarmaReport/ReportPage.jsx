@@ -1,17 +1,16 @@
-import "./ReportPage.css";
-import bdImg from "../../assets/Mask Group 112.svg";
-import "../../assets/Fonts/css/excon.css";
-import SVGComponent from "../../assets/SVGComponent";
-import Status from "../../assets/icons8-graph-report (2).svg";
-import SVGComponent2 from "../../assets/SVGComponent2";
-import tree from "../../assets/Deciduous Tree.png";
-import GaugeChart from "./graph";
 import TimelineOutlinedIcon from '@mui/icons-material/TimelineOutlined';
-import { Link } from "react-router-dom";
-import Buttons from "../../components/button";
 import { useContext, useEffect, useState } from "react";
-import { SurveyDataContext } from "../../contexts/surveyData/SurveyDataContext";
+import { Link } from "react-router-dom";
+import tree from "../../assets/Deciduous Tree.png";
+import "../../assets/Fonts/css/excon.css";
+import bdImg from "../../assets/Mask Group 112.svg";
 import positiveBg from "../../assets/positiveReportBG.png";
+import SVGComponent from "../../assets/SVGComponent";
+import SVGComponent2 from "../../assets/SVGComponent2";
+import Buttons from "../../components/button";
+import { SurveyDataContext } from "../../contexts/surveyData/SurveyDataContext";
+import GaugeChart from "./graph";
+import "./ReportPage.css";
 const ReportPage = () => {
 	const {score} =  useContext(SurveyDataContext);
 	const [percentage,setPercentage]  = useState(0);

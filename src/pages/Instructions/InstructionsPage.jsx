@@ -1,10 +1,10 @@
-import "./InstructionsPage.css";
-import logo from "../../assets/Insrtruction Image/BG1.svg";
-import brain from "../../assets/Insrtruction Image/7718867 copy.svg";
-import co2 from "../../assets/Insrtruction Image/NTU4MzQ0NDIz [Converted] copy.svg";
-import earth from "../../assets/Insrtruction Image/Group 121090.svg";
 import { useNavigate } from "react-router-dom";
+import brain from "../../assets/Insrtruction Image/7718867 copy.svg";
+import logo from "../../assets/Insrtruction Image/BG1.svg";
+import earth from "../../assets/Insrtruction Image/Group 121090.svg";
+import co2 from "../../assets/Insrtruction Image/NTU4MzQ0NDIz [Converted] copy.svg";
 import Buttons from "../../components/button";
+import "./InstructionsPage.css";
 
 const InstructionsPage = () => {
   const navigate = useNavigate();

@@ -1,7 +1,7 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import Card from "../../../components/circularProgressBarWithLabel/card/Card";
-import "./CardContainer.css";
 import { SurveyDataContext } from "../../../contexts/surveyData/SurveyDataContext";
+import "./CardContainer.css";
 
 const CardContainer = ({
   cardData,

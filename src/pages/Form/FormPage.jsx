@@ -1,15 +1,14 @@
-import React, { useState, useEffect, useContext } from "react";
-import "./FormPage.css";
+import { TextField } from "@mui/material";
+import { useContext, useEffect, useState } from "react";
 import cloud from "../../assets/clouds.svg";
-import trees from "../../assets/Trees.svg";
-import Inputs from "../../components/input";
-import Buttons from "../../components/button";
-import success from "/src/assets/success.gif";
 import lastBg from "../../assets/lastBg.png";
 import successimage from "../../assets/success-image.png";
-import { TextField } from "@mui/material";
-import { SurveyDataContext } from "../../contexts/surveyData/SurveyDataContext";
+import trees from "../../assets/Trees.svg";
+import Buttons from "../../components/button";
 import { apiHost } from "../../config/config";
+import { SurveyDataContext } from "../../contexts/surveyData/SurveyDataContext";
+import "./FormPage.css";
+import success from "/src/assets/success.gif";
 
 const FormPage = () => {
 	const {score} =  useContext(SurveyDataContext);

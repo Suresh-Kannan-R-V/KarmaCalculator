@@ -1,8 +1,8 @@
-import React, { useContext } from "react";
+import { ArcElement, Chart as ChartJS, Legend, Tooltip } from "chart.js";
+import { useContext } from "react";
 import { Doughnut } from "react-chartjs-2";
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
-import "./graph.css";
 import { SurveyDataContext } from "../../contexts/surveyData/SurveyDataContext";
+import "./graph.css";
 ChartJS.register(ArcElement, Tooltip, Legend);
 const GaugeChart = ({ karmavalue, values }) => {
 const {score} = useContext(SurveyDataContext)

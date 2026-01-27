@@ -1,27 +1,24 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable react/no-unknown-property */
+import axios from "axios";
+import CryptoJS from "crypto-js";
 import { useContext, useEffect, useState } from "react";
+import {
+  CircularProgressbarWithChildren,
+  buildStyles,
+} from "react-circular-progressbar";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import Buttons from "../../components/button";
+import { apiHost } from "../../config/config";
+import { SurveyDataContext } from "../../contexts/surveyData/SurveyDataContext";
 import "./SurveyPage.css";
+import PromptContainer from "./promptContainer/PromptContainer";
 import surveypage1 from "/src/assets/SurveyPage1.png";
 import surveypage2 from "/src/assets/SurveyPage2.png";
 import surveypage3 from "/src/assets/surveypage3.png";
 import surveypage4 from "/src/assets/surveypage4.png";
 import surveypage5 from "/src/assets/surveypage5.png";
 import surveypage6 from "/src/assets/surveypage6.png";
-import CryptoJS from "crypto-js";
-import bicycle from "/src/assets/Bicycle.png";
-import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
-import {
-  CircularProgressbarWithChildren,
-  buildStyles,
-} from "react-circular-progressbar";
-import Card from "../../components/circularProgressBarWithLabel/card/Card";
-import Button from "../../components/circularProgressBarWithLabel/card/button/Button";
-import PromptContainer from "./promptContainer/PromptContainer";
-import { useNavigate, useSearchParams } from "react-router-dom";
-import Buttons from "../../components/button";
-import { useCookies } from "react-cookie";
-import { SurveyDataContext } from "../../contexts/surveyData/SurveyDataContext";
-import axios from "axios";
-import { apiHost } from "../../config/config";
 const SurveyPage = () => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -265,7 +262,7 @@ const SurveyPage = () => {
                   if (response.status === 201) {
                     navigate("/karmareport");
                   }
-                });
+                }).catch((e) => console.log(e));
             }}
             text={"Calculate Carbon Footprint"}
             width="100%"
