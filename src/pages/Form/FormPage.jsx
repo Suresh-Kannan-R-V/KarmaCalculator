@@ -11,20 +11,20 @@ import "./FormPage.css";
 import success from "/src/assets/success.gif";
 
 const FormPage = () => {
-	const {score} =  useContext(SurveyDataContext);
-  
-	const [percentage,setPercentage]  = useState(0);
-	useEffect(()=>{
-         let percentage = (((score/14.4))*100).toFixed(2)-100;
-         setPercentage(percentage)
-         if(percentage>0){
-          setTreeCount(((percentage/100)*60).toFixed(0))
-         }
-	},[score])
-  const [treeCount,setTreeCount]=useState(1);
+  const { score } = useContext(SurveyDataContext);
 
-  
-  
+  const [percentage, setPercentage] = useState(0);
+  useEffect(() => {
+    let percentage = (((score / 14.4)) * 100).toFixed(2) - 100;
+    setPercentage(percentage)
+    if (percentage > 0) {
+      setTreeCount(((percentage / 100) * 60).toFixed(0))
+    }
+  }, [score])
+  const [treeCount, setTreeCount] = useState(1);
+
+
+
   const [formData, setFormData] = useState({
     survey_id: 1,
     name: "",
@@ -78,10 +78,10 @@ const FormPage = () => {
     if ("e_mail" in fieldValues) {
       if (!fieldValues.e_mail) {
         validationErrors.e_mail = "Email is required.";
-      } 
-      else if ( !emailPattern.test(fieldValues.e_mail)) {
+      }
+      else if (!emailPattern.test(fieldValues.e_mail)) {
         validationErrors.e_mail = "! invalid Valid email.";
-      } 
+      }
       else {
         delete validationErrors.e_mail;
       }
@@ -105,7 +105,7 @@ const FormPage = () => {
       else if (fieldValues.tree_count < treeCount) {
         validationErrors.tree_count = `Tree count must be at least ${treeCount}.`;
       }
-     else {
+      else {
         delete validationErrors.tree_count;
       }
     }
@@ -126,7 +126,6 @@ const FormPage = () => {
     setHasSubmitted(true);
 
     if (validate()) {
-      setSubmit(true);
       try {
         const response = await fetch(`${apiHost}/api/formpost`, {
           method: "POST",
@@ -138,6 +137,7 @@ const FormPage = () => {
 
         if (response.ok) {
           console.log("Form data submitted successfully");
+          setSubmit(true);
         } else {
           console.error("Error submitting form data");
         }
@@ -328,7 +328,7 @@ const FormPage = () => {
                   FormHelperTextProps={{
                     style: { fontSize: "8px" },
                   }}
-                  InputProps={{inputProps:{min:1}}}
+                  InputProps={{ inputProps: { min: 1 } }}
                   sx={{
                     "& .MuiOutlinedInput-root.Mui-error": {
                       "& fieldset": {
