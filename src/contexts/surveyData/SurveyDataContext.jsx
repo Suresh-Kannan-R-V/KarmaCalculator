@@ -2,13 +2,11 @@ import axios from "axios";
 import { createContext, useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import { apiHost } from "../../config/config";
-import { Surfing } from "@mui/icons-material";
-import FormPage from "../../pages/Form/FormPage";
 export const SurveyDataContext = createContext(null);
 
 export const SurveyDataContextProvider = ({ component }) => {
   const [score, setScore] = useState(0);
-  const [cookies, setCookie] = useCookies(['surveyData', 'lastSurveyPosition']);
+  const [cookies, setCookie, removeCookie] = useCookies(['surveyData', 'lastSurveyPosition']);
   const [surveyPostData, setSurveyPostData] = useState({
     user_id: 1,
     vehicle_id: null,
@@ -25,11 +23,27 @@ export const SurveyDataContextProvider = ({ component }) => {
     setCookie('lastSurveyPosition', data);
   }
 
+  const clearSurveyStorage = () => {
+    removeCookie('surveyData', { path: '/' });
+    removeCookie('lastSurveyPosition', { path: '/' });
+    localStorage.removeItem('surveyData');
+    localStorage.removeItem('lastSurveyPosition');
+    setScore(0);
+    setSurveyPostData({
+      user_id: 1,
+      vehicle_id: null,
+      vehicles_count: 0,
+      distance_per_week: 0,
+      food_id: null,
+      electricity_units: 0,
+      carbon_footprint: 0
+    });
+  }
+
   const fetchVehicleTypes = async () => {
     let responseData = null
     try {
       await axios.get(`${apiHost}/api/vehicleTypes`).then((res) => {
-        console.log(res.data)
         responseData = res.data;
       })
     } catch (error) {
@@ -44,7 +58,6 @@ export const SurveyDataContextProvider = ({ component }) => {
     let responseData = null
     try {
       await axios.get(`${apiHost}/api/foodTypes`).then((res) => {
-        console.log(res.data)
         responseData = res.data;
       })
     } catch (error) {
@@ -59,7 +72,6 @@ export const SurveyDataContextProvider = ({ component }) => {
     let responseData = null
     try {
       await axios.get(`${apiHost}/api/appliancesTypes`).then((res) => {
-        console.log(res.data)
         responseData = res.data;
       })
     } catch (error) {
@@ -79,7 +91,6 @@ export const SurveyDataContextProvider = ({ component }) => {
     }
     try {
       await axios.get(`${apiHost}/api/fueltypes/${vehicleId}`).then((res) => {
-        console.log(res.data)
         responseData = res.data;
       })
     } catch (error) {
@@ -178,7 +189,6 @@ export const SurveyDataContextProvider = ({ component }) => {
 
 
   useEffect(() => {
-    console.log(cookies.surveyData)
     if (cookies.surveyData) {
       let totalEmission = 0;
       totalEmission += cookies.surveyData[0].selection[3] * cookies.surveyData[0].emission;
@@ -216,7 +226,6 @@ export const SurveyDataContextProvider = ({ component }) => {
           emission: 0.00
         }
       })
-      console.log(stepArray)
       setCookie('surveyData', stepArray);
     }
 
@@ -234,7 +243,8 @@ export const SurveyDataContextProvider = ({ component }) => {
         score,
         setScore,
         surveyPostData,
-        setLastSurveyPosition
+        setLastSurveyPosition,
+        clearSurveyStorage
       }}
     >
       {component}

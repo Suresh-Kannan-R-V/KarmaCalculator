@@ -1,10 +1,8 @@
 import { useContext, useEffect, useState } from "react";
-import "./PromptContainer.css";
-import CardContainer from "../cardContainer/CardContainer";
 import SliderWithBlocks from "../../../components/circularProgressBarWithLabel/card/slider/Slider";
-import { useCookies } from "react-cookie";
-import { replace, useNavigate } from "react-router-dom";
 import { SurveyDataContext } from "../../../contexts/surveyData/SurveyDataContext";
+import CardContainer from "../cardContainer/CardContainer";
+import "./PromptContainer.css";
 const PromptContainer = ({
   isLast,
   currStep,
@@ -28,7 +26,6 @@ const PromptContainer = ({
       }
     }
   }, [currStep, currSection]);
-  console.log(currSection,currStep)
   const currentQuestion = questions.length>0?questions[currStep - 1][currSection - 1]?.q:null;
   const currentStepData = stepData.length>0?stepData[currStep - 1][currSection - 1]:null;
 

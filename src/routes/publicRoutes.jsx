@@ -3,12 +3,11 @@ import InstructionsPage from "../pages/Instructions/InstructionsPage";
 import ReportPage from "../pages/KarmaReport/ReportPage";
 import SurveyPage from "../pages/Survey/SurveyPage";
 
-import { SurveyDataContextProvider } from '../contexts/surveyData/SurveyDataContext'
 import { Navigate } from "react-router-dom";
 
 const publicRoutes = [
     {
-        path: "/",
+        index: true,
         element: <Navigate to="/instructions" />,
     },
     {
@@ -17,16 +16,15 @@ const publicRoutes = [
     },
     {
         path: '/survey',
-        element: <SurveyDataContextProvider component={<SurveyPage />} />
-
+        element: <SurveyPage />
     },
     {
         path: '/karmaReport',
-        element: <SurveyDataContextProvider component={<ReportPage />} />
+        element: <ReportPage />
     },
     {
         path: '/form',
-        element: <SurveyDataContextProvider component={<FormPage />} />
+        element: <FormPage />
     }
 ]
 

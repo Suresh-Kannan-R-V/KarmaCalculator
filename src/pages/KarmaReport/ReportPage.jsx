@@ -12,10 +12,12 @@ import { SurveyDataContext } from "../../contexts/surveyData/SurveyDataContext";
 import GaugeChart from "./graph";
 import "./ReportPage.css";
 const ReportPage = () => {
-	const {score} =  useContext(SurveyDataContext);
+	const {score, clearSurveyStorage} =  useContext(SurveyDataContext) || {};
 	const [percentage,setPercentage]  = useState(0);
 	useEffect(()=>{
-         setPercentage((((score/14.4))*100).toFixed(2)-100)
+		if(score !== undefined && score !== null) {
+			setPercentage((((score/14.4))*100).toFixed(2)-100)
+		}
 	},[score])
 	return (
 		<div className="parent" style={{ backgroundImage: `url(${percentage>0?bdImg:positiveBg})` }}>
@@ -81,7 +83,7 @@ const ReportPage = () => {
 					</div>
 				</div>
 				<div className="Remaind">
-					<Link to="/instructions">
+					<Link to="/instructions" onClick={() => clearSurveyStorage && clearSurveyStorage()}>
 						<button style={{ color: "#0E70EB" }}>Remind Me Later</button>
 					</Link>
 				</div>

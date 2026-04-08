@@ -24,23 +24,14 @@ const SurveyPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [currSection, setCurrSection] = useState(1);
   const { cookies, setLastSurveyPosition, score, surveyPostData } =
-    useContext(SurveyDataContext);
+    useContext(SurveyDataContext) || {};
   const [currStep, setCurrStep] = useState(1);
   const [validateNext, setValidateNext] = useState(false);
   const [isLast, setIsLast] = useState(false);
   const totalSteps = 4;
   useEffect(() => {
     if (cookies.lastSurveyPosition) {
-      console.log(
-        searchParams?.get("step")
-          ? Number(
-            CryptoJS.AES.decrypt(
-              searchParams?.get("section"),
-              "Karma007"
-            ).toString(CryptoJS.enc.Utf8)
-          )
-          : ""
-      );
+      
       try {
         const nextStep = searchParams?.get("step")
           ? Number(
@@ -70,7 +61,6 @@ const SurveyPage = () => {
           setCurrSection(nextSection === 0 ? 1 : nextSection);
         }
       } catch (error) {
-        console.log(error);
         setCurrStep(1);
         setCurrSection(1);
       }
@@ -78,7 +68,6 @@ const SurveyPage = () => {
   }, [searchParams, cookies.lastSurveyPosition]);
 
   const encryptData = (data) => {
-    console.log(CryptoJS.AES.encrypt(data, "Karma007").toString());
     return CryptoJS.AES.encrypt(data, "Karma007").toString();
   };
 
@@ -255,7 +244,6 @@ const SurveyPage = () => {
         {isLast && (
           <Buttons
             onClick={() => {
-              console.log(surveyPostData)
               axios
                 .post(`${apiHost}/api/carbonsurvey`, surveyPostData)
                 .then((response) => {

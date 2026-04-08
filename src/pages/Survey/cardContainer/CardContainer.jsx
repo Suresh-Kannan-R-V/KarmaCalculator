@@ -13,8 +13,6 @@ const CardContainer = ({
 }) => {
   const { cookies, setSurveyData } = useContext(SurveyDataContext);
   const handleBorder = (index) => {
-    console.log(currSection);
-    console.log(cookies.surveyData[currStep - 1]);
     let emission = 0;
     if (
       !cookies.surveyData[currStep - 1]?.selection[currSection - 1]?.includes(

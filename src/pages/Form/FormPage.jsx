@@ -11,14 +11,15 @@ import "./FormPage.css";
 import success from "/src/assets/success.gif";
 
 const FormPage = () => {
-  const { score } = useContext(SurveyDataContext);
-
+  const { score, clearSurveyStorage } = useContext(SurveyDataContext) || {};
   const [percentage, setPercentage] = useState(0);
   useEffect(() => {
-    let percentage = (((score / 14.4)) * 100).toFixed(2) - 100;
-    setPercentage(percentage)
-    if (percentage > 0) {
-      setTreeCount(((percentage / 100) * 60).toFixed(0))
+    if (score !== undefined && score !== null) {
+      let percentage = (((score / 14.4)) * 100).toFixed(2) - 100;
+      setPercentage(percentage)
+      if (percentage > 0) {
+        setTreeCount(((percentage / 100) * 60).toFixed(0))
+      }
     }
   }, [score])
   const [treeCount, setTreeCount] = useState(1);
@@ -136,7 +137,7 @@ const FormPage = () => {
         });
 
         if (response.ok) {
-          console.log("Form data submitted successfully");
+          clearSurveyStorage();
           setSubmit(true);
         } else {
           console.error("Error submitting form data");
